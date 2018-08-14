@@ -20,6 +20,7 @@ class Personalize_Login_Plugin {
      	
      	add_shortcode( 'custom-login-form', array( $this, 'render_login_form' ) );
      	add_shortcode( 'custom-register-form', array( $this, 'render_register_form' ) );
+     	add_shortcode( 'custom-edit-form', array( $this, 'render_edit_form' ) );
 		add_shortcode( 'custom-password-lost-form', array( $this, 'render_password_lost_form' ) );
 		add_shortcode( 'custom-password-reset-form', array( $this, 'render_password_reset_form' ) );
      	add_shortcode( 'account-info', array( $this, 'render_account_info_form' ) );
@@ -27,6 +28,8 @@ class Personalize_Login_Plugin {
 
      	add_action( 'login_form_register', array( $this, 'do_register_user' ) );
      	add_action( 'login_form_register', array( $this, 'redirect_to_custom_register' ) );
+     	add_action( 'login_form_edit', array( $this, 'do_edit_user' ) );
+     	add_action( 'login_form_edit', array( $this, 'redirect_to_custom_edit' ) );
      	add_action( 'login_form_lostpassword', array( $this, 'redirect_to_custom_lostpassword' ) );
 		add_action( 'login_form_lostpassword', array( $this, 'do_password_lost' ) );
      	add_action( 'login_form_login', array( $this, 'redirect_to_custom_login' ) );
@@ -334,6 +337,7 @@ class Personalize_Login_Plugin {
 	    }
 	}
 
+
     /**
 	 * Validates and then completes the new user signup process if all went well.
 	 *
@@ -401,6 +405,8 @@ class Personalize_Login_Plugin {
 	    return $user_id;
 	}
 
+
+
 	/*add_action( 'user_register', 'myplugin_user_register' );
     	
     	function myplugin_user_register( $user_id ) {
@@ -456,6 +462,166 @@ class Personalize_Login_Plugin {
 	        return $this->get_template_html( 'register_form', $attributes );
 	    }
 	}
+
+
+/*public function redirect_to_custom_edit() {
+	    
+	    if ( 'POST' == $_SERVER['REQUEST_METHOD' && !empty( $_POST['action'] ) && $_POST['action'] == 'update-user'] ) {
+	       
+	       wp_redirect( home_url( 'member-account' ) );
+
+	        exit;
+	    }
+	}*/
+
+
+/**
+ * Alterando os dados no cadastro
+ */
+/*
+public function do_edit_user() {
+
+	if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
+
+	        $redirect_url = home_url( 'member-edit' );
+	 
+	        
+	            $email = $_POST['email'];
+	            $first_name = sanitize_text_field( $_POST['first_name'] );
+	            $last_name = sanitize_text_field( $_POST['last_name'] );
+	            $user_phone = sanitize_text_field( $_POST['user_phone'] );
+	            $user_cpf = sanitize_text_field( $_POST['user_cpf'] );
+	            $user_gender = sanitize_text_field( $_POST['user_gender'] );
+	 
+	            $result = $this->edit_user( $email, $first_name, $last_name, $user_phone, $user_cpf, $user_gender );
+	 
+	            if ( is_wp_error( $result ) ) {
+	                // Parse errors into a string and append as parameter to redirect
+	                $errors = join( ',', $result->get_error_codes() );
+	                $redirect_url = add_query_arg( 'edit-errors', $errors, $redirect_url );
+	            } else {
+	                // Success, redirect to login page.
+	                $redirect_url = home_url( 'member-edit' );
+	            }
+	        
+	 
+	        wp_redirect( $redirect_url );
+	        exit;
+	    }
+
+}*/
+
+
+
+    /**
+	 * Validates and then completes the new user signup process if all went well.
+	 *
+	 * @param string $email         The new user's email address
+	 * @param string $first_name    The new user's first name
+	 * @param string $last_name     The new user's last name
+	 *
+	 * @return int|WP_Error         The id of the user that was created, or error if failed.
+	 */
+	/*private function edit_user( $email, $first_name, $last_name, $user_phone, $user_cpf, $user_gender ) {
+	    $errors = new WP_Error();
+	 
+	    // Email address is used as both username and email. It is also the only
+	    // parameter we need to validate
+	    if ( ! is_email( $email ) ) {
+	        $errors->add( 'email', $this->get_error_message( 'email' ) );
+	        return $errors;
+	    }
+	 
+	    if ( username_exists( $email ) || email_exists( $email ) ) {
+	        $errors->add( 'email_exists', $this->get_error_message( 'email_exists') );
+	        return $errors;
+	    }
+
+	    if ( ! $user_phone ) {
+	        $errors->add( 'user_phone', $this->get_error_message( 'user_phone' ) );
+	        return $errors;
+	    }
+
+	    if ( ! $user_cpf ) {
+	        $errors->add( 'user_cpf', $this->get_error_message( 'user_cpf' ) );
+	        return $errors;
+	    }
+
+	    if ( ! $user_gender ) {
+	        $errors->add( 'user_gender', $this->get_error_message( 'user_gender' ) );
+	        return $errors;
+	    }
+
+
+	    global $current_user;
+	    get_currentuserinfo();
+	    $user = wp_get_current_user();
+
+	    $user_id = get_current_user_id();
+	 
+	    //$user_id = wp_insert_user( $user_data );
+
+	    //salvando campos customizados
+	   
+
+	    wp_update_user( array( 'ID' => $user_id, 'user_email' => esc_attr( $_POST['user_email'] ) ) );
+	    wp_update_user( array( 'ID' => $user_id, 'first_name' => esc_attr( $_POST['first_name'] ) ) );
+	    wp_update_user( array( 'ID' => $user_id, 'last_name' => esc_attr( $_POST['last_name'] ) ) );
+	    wp_update_user( array( 'ID' => $user_id, 'nickname' => esc_attr( $_POST['nickname'] ) ) );
+	    wp_update_user( array( 'ID' => $user_id, 'user_email' => esc_attr( $_POST['user_email'] ) ) );
+	    wp_update_user( array( 'ID' => $user_id, 'user_phone' => esc_attr( $_POST['user_phone'] ) ) );
+	    wp_update_user( array( 'ID' => $user_id, 'user_cpf' => esc_attr( $_POST['user_cpf'] ) ) );
+	    wp_update_user( array( 'ID' => $user_id, 'user_gender' => esc_attr( $_POST['user_gender'] ) ) );
+
+	 
+	}*/
+/*
+//Redirect
+public function redirect_to_custom_edit() {
+	    if ( 'GET' == $_SERVER['REQUEST_METHOD'] ) {
+	        if ( is_user_logged_in() ) {
+	            $this->redirect_logged_in_user();
+	        } else {
+	            wp_redirect( home_url( 'member-account' ) );
+	        }
+	        exit;
+	    }
+	}
+*/
+
+    /**
+	 * A shortcode for rendering the new user registration form.
+	 *
+	 * @param  array   $attributes  Shortcode attributes.
+	 * @param  string  $content     The text content for shortcode. Not used.
+	 *
+	 * @return string  The shortcode output
+	 */
+	
+	public function render_edit_form( $attributes, $content = null ) {
+		
+	    // Parse shortcode attributes
+	    $default_attributes = array( 'show_title' => false );
+	    $attributes = shortcode_atts( $default_attributes, $attributes );
+	 	
+	 	// Retrieve possible errors from request parameters
+		$attributes['errors'] = array();
+		if ( isset( $_REQUEST['edit-errors'] ) ) {
+		    $error_codes = explode( ',', $_REQUEST['edit-errors'] );
+		 
+		    foreach ( $error_codes as $error_code ) {
+		        $attributes['errors'] []= $this->get_error_message( $error_code );
+		    }
+		}
+
+	    if ( is_user_logged_in() ) {
+	       
+	        return $this->get_template_html( 'edit_form', $attributes );
+	    }
+	}
+
+
+
 
     /**
 		 * Redirect the user to the custom login page instead of wp-login.php.
@@ -641,6 +807,10 @@ class Personalize_Login_Plugin {
 	        	'title' => __( 'Registrar', 'personalize-login' ),
 	        	'content' => '[custom-register-form]'
 	    	),
+	    	'member-edit' => array(
+	            'title' => __( 'Alterar meus dados', 'personalize-login' ),
+	            'content' => '[custom-edit-form]'
+	        ),
 	    	'member-password-lost' => array(
 		        'title' => __( 'Esqueceu sua senha?', 'personalize-login' ),
 		        'content' => '[custom-password-lost-form]'
