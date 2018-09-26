@@ -17,11 +17,7 @@
 		color: #29cb00;
 	}
 	.card-cupom .cupom strong{
-		color: #9d0a0e;
-    	background: #ffd800;
-    	font-size: 15px;
-    	padding: 2px 5px;
-    	border: 1px dashed;
+	
 	}
 	.card-cupom .promocao strong{
 		font-size: 16px;
@@ -32,7 +28,6 @@
 <?php
 	if ( is_user_logged_in() ) {
 	    global $current_user;
-	    get_currentuserinfo();
 	    $user = wp_get_current_user();
 	
 ?>
@@ -44,7 +39,7 @@
 		  				<a class="NavigationLink u-paddingHorizontal--inter--half u-displayBlock" href="<?php echo get_home_url(); ?>/member-account/"><strong>Meus dados</strong></a>
 		  			</li>
 		  			<li class="Navigation-items-item">
-		  				<a class="NavigationLink u-paddingHorizontal--inter--half u-displayBlock" href="<?php echo get_home_url(); ?>/dashboard/"><strong>Meus cupons</strong></a>
+		  				<a class="NavigationLink u-paddingHorizontal--inter--half u-displayBlock" href="<?php echo get_home_url(); ?>/dashboard/"><strong>Meus ingressos</strong></a>
 		  			</li>
 		  			<li class="Navigation-items-item">
 		  				<a class="NavigationLink u-paddingHorizontal--inter--half u-displayBlock" href="<?php echo get_home_url(); ?>/wp-login.php?action=logout"><strong>Sair</strong></a>
@@ -55,7 +50,7 @@
 		<div class="SiteMain-main right u-size18of24">
 			<header class="Section-header">
 				<h3 class="Section-header-title u-marginBottom--inter">
-					Meus Cupons
+					Meus ingressos
 				</h3>
 			</header>
 			<div class="Section-content">
@@ -63,14 +58,8 @@
 	<?php 
 		$current_user_id = get_current_user_id();
 
-			$newsArgs = array( 'post_type' => 'coupons', 'posts_per_page' => 33, 'meta_key' => '_id_user',
-			'meta_query' => array(
-       			array(
-		           'key' => '_id_user',
-		           'value' => array($current_user_id),
-		           'compare' => 'IN',
-   				)
-  			), 'orderby' => 'meta_value_num', 'order' => 'ASC');
+
+			$newsArgs = array( 'post_type' => 'ingresso', 'posts_per_page' => 50, 'author' => $current_user_id, 'orderby' => 'meta_value_num', 'order' => 'ASC');
 
 			$newsLoop = new WP_Query( $newsArgs );
 				
@@ -80,18 +69,31 @@
 			<?php while ( $newsLoop->have_posts() ) : $newsLoop->the_post();
 
 				$id_post = get_the_ID();
-				$_id_promo      = get_post_meta( $id_post, '_id_promo', true );
-				$_id_user       = get_post_meta( $id_post, '_id_user', true );
-				$_titulo_promo  = get_post_meta( $id_post, '_titulo_promo', true );
-				$_status_coupon = get_post_meta( $id_post, '_status_coupon', true );
+
+				$meta_box_id_evento  = get_post_meta( $id_post, 'meta_box-id_evento', true );
+				$meta_box_id_ingresso  = get_post_meta( $id_post, 'meta_box-id_ingresso', true );
+				$meta_box_valor_ingresso  = get_post_meta( $id_post, 'meta_box-valor_ingresso', true );
+				$meta_box_date_negociacao = get_post_meta( $id_post, 'meta_box-date_negociacao', true );
+				$tipo_oferta_ingresso      = get_post_meta( $id_post, 'meta_box-tipo_oferta', true );
+				$meta_box_vendedor      = get_post_meta( $id_post, 'meta_box-vendedor_ingresso', true );
+				$meta_box_comprador      = get_post_meta( $id_post, 'meta_box-comprador_ingresso', true );
+				$meta_box_status_negociacao   = get_post_meta( $id_post, 'meta_box-status_ingresso', true );
+
+
+
+
+
 			?>
 
 			<li class="card-cupom">
 				<?php
   					
-					echo '<h3 class="promocao">Promoção: <strong>' . $_titulo_promo  . '</strong></h3>';
-	   				echo '<h3 class="cupom">Cupom: <strong>'   . get_the_title() . '</strong> </h3>';
-  					echo '<h3 class="status">Status: <strong>' . $_status_coupon . '</strong> </h3>';
+					echo '<h3 class="promocao">Evento: <strong>' . get_the_title( $meta_box_id_evento )  . '</strong></h3>';
+	   				echo '<h3 class="cupom">Ingresso: <strong>'   . get_the_title( $meta_box_id_ingresso ) . '</strong> </h3>';
+  					echo '<p class="tipo">Tipo de Negociação: <strong>' . intepreta_labels('tipo_oferta', $tipo_oferta_ingresso) . '</strong> </p>';
+  					echo '<p class="valor">Valor: <strong>R$ ' . $meta_box_valor_ingresso . '</strong> </p>';
+  					echo '<p class="data">Data: <strong>' . $meta_box_date_negociacao . '</strong> </p>';
+  					echo '<p class="status">Status: <strong>' . intepreta_labels('status_ingresso', $meta_box_status_negociacao) . '</strong> </p>';
 				?>
 			</li><br/>
 

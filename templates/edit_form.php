@@ -3,7 +3,6 @@
 
 
 	    global $current_user;
-	    get_currentuserinfo();
 	    $user = wp_get_current_user();
 
 	?>

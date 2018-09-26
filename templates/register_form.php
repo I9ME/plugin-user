@@ -82,8 +82,8 @@
             </p>
 
             <p class="form-row">
-                <label for="user_cpf"><?php _e( 'CPF', 'personalize-login' ); ?><strong>*</strong></label>
-                <input type="text" name="user_cpf" id="user_cpf" required="required">
+                <label for="user_cpf"><?php _e( 'CPF', 'personalize-login' ); ?></label>
+                <input type="text" name="user_cpf" id="user_cpf">
             </p>
      
             <p class="form-row">
