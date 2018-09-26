@@ -314,7 +314,8 @@ class Personalize_Login_Plugin {
 	        } else {
 	            $email = $_POST['email'];
 	            $first_name = sanitize_text_field( $_POST['first_name'] );
-	            $last_name = sanitize_text_field( $_POST['last_name'] );
+	            //$last_name = sanitize_text_field( $_POST['last_name'] );
+	            $last_name = '';
 	            $user_phone = sanitize_text_field( $_POST['user_phone'] );
 	            $user_cpf = sanitize_text_field( $_POST['user_cpf'] );
 	            $user_gender = sanitize_text_field( $_POST['user_gender'] );
@@ -366,11 +367,11 @@ class Personalize_Login_Plugin {
 	        $errors->add( 'user_phone', $this->get_error_message( 'user_phone' ) );
 	        return $errors;
 	    }
-
+/*
 	    if ( ! $user_cpf ) {
 	        $errors->add( 'user_cpf', $this->get_error_message( 'user_cpf' ) );
 	        return $errors;
-	    }
+	    }*/
 
 	    if ( ! $user_gender ) {
 	        $errors->add( 'user_gender', $this->get_error_message( 'user_gender' ) );
@@ -403,6 +404,8 @@ class Personalize_Login_Plugin {
 	    wp_new_user_notification( $user_id, $password );
 	 
 	    return $user_id;
+
+	    // Caso o problema não seja resolvido pelo Dev Bruno, Realizar a substituição do "wp_new_user_notification" pelo input de password.
 	}
 
 

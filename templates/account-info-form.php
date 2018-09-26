@@ -1,7 +1,6 @@
 <?php
 	if ( is_user_logged_in() ) {
 	    global $current_user;
-	    get_currentuserinfo();
 	    $user = wp_get_current_user();
 	
 	?>
@@ -13,7 +12,7 @@
 		  				<a class="NavigationLink u-paddingHorizontal--inter--half u-displayBlock" href="<?php echo get_home_url(); ?>/member-account/"><strong>Meus dados</strong></a>
 		  			</li>
 		  			<li class="Navigation-items-item">
-		  				<a class="NavigationLink u-paddingHorizontal--inter--half u-displayBlock" href="<?php echo get_home_url(); ?>/dashboard/"><strong>Meus cupons</strong></a>
+		  				<a class="NavigationLink u-paddingHorizontal--inter--half u-displayBlock" href="<?php echo get_home_url(); ?>/dashboard/"><strong>Meus ingressos</strong></a>
 		  			</li>
 		  			<li class="Navigation-items-item">
 		  				<a class="NavigationLink u-paddingHorizontal--inter--half u-displayBlock" href="<?php echo get_home_url(); ?>/wp-login.php?action=logout"><strong>Sair</strong></a>
