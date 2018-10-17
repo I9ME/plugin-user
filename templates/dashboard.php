@@ -137,7 +137,7 @@
 		$current_user_id = get_current_user_id();
 
 
-			$newsArgs = array( 'post_type' => 'ingresso', 'posts_per_page' => 50, 'author' => $current_user_id, 'orderby' => 'meta_value_num', 'order' => 'ASC');
+			$newsArgs = array( 'post_type' => 'ingresso', 'posts_per_page' => 50, 'author' => $current_user_id, 'orderby' => 'meta_value_num', 'order' => 'DESC');
 
 			$newsLoop = new WP_Query( $newsArgs );
 				

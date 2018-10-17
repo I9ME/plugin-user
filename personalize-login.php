@@ -669,9 +669,17 @@ public function redirect_to_custom_edit() {
 
 	public function redirect_after_login( $redirect_to, $requested_redirect_to, $user ) {
 
-		    if ( !current_user_can( 'administrator' ) && isset( $_POST['get_url'] ) ) {
+		    if ( isset( $_POST['get_url'] ) ) {
 
-		    	$redirect_url = $_POST['get_url'];
+		    	if( !empty( $_POST['get_url'] ) ) {
+
+			    	$redirect_url = $_POST['get_url'];
+			    
+			    } else {
+
+			    	$redirect_url = home_url() . '/dashboard/';
+
+			    }
 
 		    } else {
 
