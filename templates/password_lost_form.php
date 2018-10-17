@@ -1,22 +1,19 @@
 <div id="password-lost-form" class="widecolumn">
-    <?php if ( $attributes['show_title'] ) : ?>
-        <h3><?php _e( 'Esqueceu sua senha?', 'personalize-login' ); ?></h3>
-    <?php endif; ?>
+  
+        <h3>Esqueceu sua senha?</h3>
  
     <p>
         <?php
             _e(
-                "Digite seu endereço de e-mail e enviaremos um link para você escolher uma nova senha.",
+                "Digite seu endereço de e-mail.",
                 'personalize_login'
             );
         ?>
     </p>
-    <?php if ( $attributes['lost_password_sent'] ) : ?>
         <p class="login-info">
-            <?php _e( 'Verifique no seu email um link para redefinir sua senha.', 'personalize-login' ); ?>
+           Verifique no seu email um link para redefinir sua senha.
         </p>
-    <?php endif; ?>
-    
+
     <?php if ( count( $attributes['errors'] ) > 0 ) : ?>
         <?php foreach ( $attributes['errors'] as $error ) : ?>
             <p>

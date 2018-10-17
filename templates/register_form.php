@@ -80,7 +80,12 @@
                 <label for="email"><?php _e( 'E-mail:', 'personalize-login' ); ?><strong>*</strong></label>
                 <input type="text" name="email" id="email" required="required">
             </p>
-
+            <p class="form-row">
+                <label for="password"><?php _e( 'Senha:', 'personalize-login' ); ?><strong>*</strong></label>
+                <input type="password" name="password" id="password" required="required">
+            </p>
+            <div>
+   
             <p class="form-row">
                 <label for="user_cpf"><?php _e( 'CPF', 'personalize-login' ); ?></label>
                 <input type="text" name="user_cpf" id="user_cpf">
@@ -92,8 +97,8 @@
             </p>
             
             <p class="form-row">
-                <label for="user_gender"><?php _e( 'Gênero', 'personalize-login' ); ?><strong>*</strong></label>
-                <select class="Form-input Form-input--select Form-select" name="user_gender" id="user_gender" required="required">
+                <label for="user_gender"><?php _e( 'Gênero', 'personalize-login' ); ?></label>
+                <select class="Form-input Form-input--select Form-select" name="user_gender" id="user_gender">
                     <option>Escolha</option>
                     <option value="masculino">Masculino</option>
                     <option value="feminino">Feminino</option>
@@ -101,7 +106,7 @@
             </p>
 
             <p class="form-row msg">
-                <?php _e( 'Sua senha será gerada automaticamente e enviada para seu endereço de e-mail.', 'personalize-login' ); ?>
+                <?php _e( 'Após o cadastro, use os dados de "e-mail" e "senha" para acessar a sua conta.', 'personalize-login' ); ?>
             </p>
 
 

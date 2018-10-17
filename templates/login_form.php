@@ -93,7 +93,7 @@
         <p class="login-info login--infoPass">
             <?php 
                 printf(
-                    __( 'Enviamos sua senha por e-mail para o endereço de e-mail que você digitou.', 'personalize-login' ),
+                    __( 'Utilize o seu e-mail e senha para acessar a sua conta.', 'personalize-login' ),
                     get_bloginfo( 'name' )
                 );
             ?>
@@ -105,6 +105,7 @@
         </p>
     <?php endif; ?> 
     <form method="post" action="<?php echo wp_login_url(); ?>">
+        <input type="hidden" name="get_url" id="get_url" value="<?php if( isset( $_GET['url'] ) ) { echo $_GET['url']; } ?>" />
         <p class="login-username">
             <label for="user_login"><?php _e( 'Digite seu e-mail', 'personalize-login' ); ?></label>
             <input type="text" name="log" id="user_login">

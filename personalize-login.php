@@ -313,6 +313,7 @@ class Personalize_Login_Plugin {
 	            $redirect_url = add_query_arg( 'register-errors', 'closed', $redirect_url );
 	        } else {
 	            $email = $_POST['email'];
+	            $password = $_POST['password'];
 	            $first_name = sanitize_text_field( $_POST['first_name'] );
 	            //$last_name = sanitize_text_field( $_POST['last_name'] );
 	            $last_name = '';
@@ -320,7 +321,7 @@ class Personalize_Login_Plugin {
 	            $user_cpf = sanitize_text_field( $_POST['user_cpf'] );
 	            $user_gender = sanitize_text_field( $_POST['user_gender'] );
 	 
-	            $result = $this->register_user( $email, $first_name, $last_name, $user_phone, $user_cpf, $user_gender );
+	            $result = $this->register_user( $email, $password, $first_name, $last_name, $user_phone, $user_cpf, $user_gender );
 	 
 	            if ( is_wp_error( $result ) ) {
 	                // Parse errors into a string and append as parameter to redirect
@@ -348,7 +349,7 @@ class Personalize_Login_Plugin {
 	 *
 	 * @return int|WP_Error         The id of the user that was created, or error if failed.
 	 */
-	private function register_user( $email, $first_name, $last_name, $user_phone, $user_cpf, $user_gender ) {
+	private function register_user( $email, $password, $first_name, $last_name, $user_phone, $user_cpf, $user_gender ) {
 	    $errors = new WP_Error();
 	 
 	    // Email address is used as both username and email. It is also the only
@@ -367,19 +368,19 @@ class Personalize_Login_Plugin {
 	        $errors->add( 'user_phone', $this->get_error_message( 'user_phone' ) );
 	        return $errors;
 	    }
-/*
-	    if ( ! $user_cpf ) {
-	        $errors->add( 'user_cpf', $this->get_error_message( 'user_cpf' ) );
-	        return $errors;
-	    }*/
 
+	    if ( ! $password ) {
+	        $errors->add( 'user_pass', $this->get_error_message( 'user_pass' ) );
+	        return $errors;
+	    }
+/*
 	    if ( ! $user_gender ) {
 	        $errors->add( 'user_gender', $this->get_error_message( 'user_gender' ) );
 	        return $errors;
-	    }
+	    }*/
 	 
 	    // Generate the password so that the subscriber will have to check email...
-	    $password = wp_generate_password( 12, false );
+	    //$password = wp_generate_password( 12, false );
 	 
 	    $user_data = array(
 	        'user_login'    => $email,
@@ -401,7 +402,7 @@ class Personalize_Login_Plugin {
 	    update_user_meta( $user_id, 'user_cpf', sanitize_text_field( $_POST['user_cpf'] ) );
 	    update_user_meta( $user_id, 'user_gender', sanitize_text_field( $_POST['user_gender'] ) );
 
-	    wp_new_user_notification( $user_id, $password );
+	    //wp_new_user_notification( $user_id, $password );
 	 
 	    return $user_id;
 
@@ -667,34 +668,17 @@ public function redirect_to_custom_edit() {
 	*/
 
 	public function redirect_after_login( $redirect_to, $requested_redirect_to, $user ) {
-		    $redirect_url = home_url();
-		 
-		    if ( ! isset( $user->ID ) ) {
-		        return $redirect_url;
-		    }
-		 
-		    if ( user_can( $user, 'manage_options' ) ) {
-		        // Use the redirect_to parameter if one is set, otherwise redirect to admin dashboard.
-		        if ( $requested_redirect_to == '' ) {
-		            $redirect_url = admin_url();
-		        } else {
-		            $redirect_url = $requested_redirect_to;
-		        }
+
+		    if ( !current_user_can( 'administrator' ) && isset( $_POST['get_url'] ) ) {
+
+		    	$redirect_url = $_POST['get_url'];
+
 		    } else {
-		        // Non-admin users always go to their account page after login
-		        if( isset($_GET['url']) ){
 
-		        	$redirect_url = $_GET['url'];
-		    	
-		    	} else {
-
-		    		$redirect_url = home_url();
-		    		
-		    	}
-
-		        
-
+		    	$redirect_url = admin_url();
+		    
 		    }
+		 
 		 
 		    return wp_validate_redirect( $redirect_url, home_url() );
 	}

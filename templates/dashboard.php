@@ -14,8 +14,15 @@
     	border-radius: 3px;
 	}
 	.card-cupom .status strong{
-		color: #29cb00;
+		color: #286319;
 	}
+	.card-cupom .status.cancel strong{
+		color: #b92323;
+	}
+	.card-cupom .status.sale strong{
+		color: #124e9a;
+	}
+	
 	.card-cupom .cupom strong{
 	
 	}
@@ -23,12 +30,83 @@
 		font-size: 16px;
     	font-weight: 400;
 	}
+	.linkButton{
+		position: relative;
+		display: inline-block;
+		padding: 4px 10px;
+		margin: 0 0 0 15px;
+		font-size: 13px;
+		font-weight: bold;
+	}
+	.linkButton.cancel{
+		border: 2px solid #b92323;
+		color: #b92323;
+	}
+	.linkButton.cancel:hover{
+		background: #b92323;
+		color: #FFF;
+	}
+	.linkButton.sale{
+		border: 2px solid #124e9a;
+		color: #124e9a;
+	}
+	.linkButton.sale:hover{
+		background: #124e9a;
+		color: #FFF;
+	}
+	.actionResult{
+		position: relative;
+		display: none;
+		align-items: center;
+		justify-content: center;
+		padding: 25px;
+		font-size: 14px;
+		text-align: center;
+		margin: 0 0 20px 0;
+	}
+	.actionResult.success{
+		background: #bbffa9;
+		border: 1px solid #82d26d;
+		color: #286319;
+	}
+	.actionResult.error{
+		background: #ffd1d1;
+		border: 1px solid #fd8787;
+		color: #b92323;
+	}
+	.actions{
+		margin: 20px 0 0 0;
+	}
 </style>
 
 <?php
 	if ( is_user_logged_in() ) {
 	    global $current_user;
 	    $user = wp_get_current_user();
+
+	    if( isset($_GET['action']) && !empty($_GET['action']) ){
+	    	$action_ = $_GET['action'];
+	    	$id_ticket = $_GET['id'];
+
+	    	update_post_meta($id_ticket, 'meta_box-status_ingresso', $action_);
+
+	    	?>
+
+	    	<style type="text/css">
+	    		.id-<?php echo $id_ticket; ?>{
+	    			background: #ffd1d1;
+					border: 1px solid #fd8787;
+	    		}
+	    		.actionResult.success{
+	    			display: block;
+	    		}
+	    	</style>
+
+	    	<?php
+
+	    	echo'<div class="actionResult success">A sua solicitação foi concluída com <strong> sucesso!</strong></div>';
+	    	echo'<div class="actionResult error">Falha!</div>';
+	    }
 	
 ?>
  <div class="SiteMain u-hasSideBar u-displayFlex u-flexDirectionColumn u-flexSwitchRow u-sizeFull">
@@ -79,13 +157,9 @@
 				$meta_box_comprador      = get_post_meta( $id_post, 'meta_box-comprador_ingresso', true );
 				$meta_box_status_negociacao   = get_post_meta( $id_post, 'meta_box-status_ingresso', true );
 
-
-
-
-
 			?>
 
-			<li class="card-cupom">
+			<li class="card-cupom id-<?php echo $id_post; ?>">
 				<?php
   					
 					echo '<h3 class="promocao">Evento: <strong>' . get_the_title( $meta_box_id_evento )  . '</strong></h3>';
@@ -93,7 +167,12 @@
   					echo '<p class="tipo">Tipo de Negociação: <strong>' . intepreta_labels('tipo_oferta', $tipo_oferta_ingresso) . '</strong> </p>';
   					echo '<p class="valor">Valor: <strong>R$ ' . $meta_box_valor_ingresso . '</strong> </p>';
   					echo '<p class="data">Data: <strong>' . $meta_box_date_negociacao . '</strong> </p>';
-  					echo '<p class="status">Status: <strong>' . intepreta_labels('status_ingresso', $meta_box_status_negociacao) . '</strong> </p>';
+  					echo '<p class="status ' .  intepreta_labels('slug_status', $meta_box_status_negociacao) . '">Status: <strong>' . intepreta_labels('status_ingresso', $meta_box_status_negociacao) . '</strong></p>';
+  					if( $meta_box_status_negociacao == 1 ) {
+
+  						echo '<p class="actions"><a class="linkButton cancel" href="' . get_home_url() . '/dashboard/?action=4&id=' . $id_post . '">CANCELAR OFERTA</a><a class="linkButton sale" href="' . get_home_url() . '/dashboard/?action=2&id=' . $id_post . '">INGRESSO JÁ NEGOCIADO</a></p>';
+						
+					}
 				?>
 			</li><br/>
 
